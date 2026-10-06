@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>FixCamp – Campus Maintenance Reporting</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f6f4ee;--card:#fff;--ink:#14213d;--mut:#5b6478;--line:#e2dfd4;--hv:#ffc400;--on-hv:#14213d;--btn:#14213d;--on-btn:#fff;--hi:#d64545;--med:#c77700;--low:#2e7d5b;--pen:#b8860b;--prog:#2563eb;--res:#2e7d5b;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10141f;--card:#1a2030;--ink:#eef0f6;--mut:#a3abbd;--line:#2c3448;--btn:#ffc400;--on-btn:#14213d;--hi:#ff7b7b;--med:#f0a63a;--low:#5fd0a0;--pen:#f0c040;--prog:#7aa7ff;--res:#5fd0a0}}
+:root[data-theme="dark"]{--bg:#10141f;--card:#1a2030;--ink:#eef0f6;--mut:#a3abbd;--line:#2c3448;--btn:#ffc400;--on-btn:#14213d;--hi:#ff7b7b;--med:#f0a63a;--low:#5fd0a0;--pen:#f0c040;--prog:#7aa7ff;--res:#5fd0a0}
+*,*:before,*:after{box-sizing:inherit}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 Archivo,system-ui,-apple-system,"Segoe UI",sans-serif}
+button,input,select,textarea{font:inherit;color:inherit}
+.stripe{height:10px;background:repeating-linear-gradient(-45deg,var(--hv) 0 14px,#14213d 14px 28px)}
+header{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;padding:12px 20px;background:var(--card);border-bottom:1px solid var(--line)}
+.brand{font-weight:800;font-size:22px;letter-spacing:-.5px}.brand span{background:var(--hv);color:#14213d;padding:0 6px;border-radius:4px;margin-left:2px}
+nav{display:flex;gap:4px;flex-wrap:wrap;flex:1}
+nav button{background:none;border:0;padding:7px 12px;border-radius:6px;cursor:pointer;color:var(--mut);font-weight:600}
+nav button.on{background:var(--btn);color:var(--on-btn)}
+.who{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--mut)}
+main{max-width:1100px;margin:0 auto;padding:22px 20px 60px}
+h1{font-size:28px;letter-spacing:-.6px;margin:0 0 4px}h2{font-size:18px;margin:0 0 12px}.sub{color:var(--mut);margin:0 0 20px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:22px}
+.tile{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--ink);border-radius:8px;padding:12px 14px}
+.tile b{display:block;font-size:30px;line-height:1.1}.tile small{color:var(--mut)}
+.btn{background:var(--btn);color:var(--on-btn);border:0;padding:10px 18px;border-radius:7px;font-weight:700;cursor:pointer}
+.btn.alt{background:none;color:var(--ink);border:1px solid var(--line)}.btn.ok{background:var(--res);color:#fff}.btn.sm{padding:5px 10px;font-size:13px}
+:focus-visible{outline:3px solid var(--prog);outline-offset:2px}
+label{display:block;font-weight:600;font-size:13px;margin:12px 0 4px}
+input,select,textarea{width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:7px;background:var(--bg)}
+textarea{min-height:90px;resize:vertical}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 16px}
+.chk{display:flex;align-items:center;gap:6px;font-weight:400;margin:8px 0}.chk input{width:auto}
+.pill{display:inline-block;padding:2px 9px;border-radius:99px;font-size:12px;font-weight:700;border:1.5px solid currentColor}
+.High,.Pending{color:var(--hi)}.Pending{color:var(--pen)}.Medium{color:var(--med)}.Low{color:var(--low)}.Progress{color:var(--prog)}.Resolved{color:var(--res)}
+.filters{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:8px;margin-bottom:12px}
+.tw{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:640px}
+th{text-align:left;font-size:12px;color:var(--mut);padding:8px;border-bottom:2px solid var(--line)}
+td{padding:10px 8px;border-bottom:1px solid var(--line)}tbody tr{cursor:pointer}tbody tr:hover{background:var(--bg)}
+.empty{padding:30px;text-align:center;color:var(--mut)}
+.auth{max-width:430px;margin:40px auto}.hero{font-size:44px;font-weight:800;letter-spacing:-1.5px;line-height:1;margin:0 0 8px}
+.tabs{display:flex;gap:6px;margin-bottom:6px}.tabs button{flex:1;padding:9px;border:1px solid var(--line);background:none;border-radius:7px;font-weight:700;cursor:pointer}.tabs .on{background:var(--btn);color:var(--on-btn)}
+.err{color:var(--hi);font-size:13px;min-height:18px;margin-top:8px}.hint{font-size:12px;color:var(--mut);margin-top:14px;border-top:1px dashed var(--line);padding-top:10px}
+#modal{position:fixed;inset:0;background:rgba(10,14,25,.6);display:none;align-items:flex-start;justify-content:center;overflow:auto;padding:30px 14px;z-index:9}
+#modal.on{display:flex}.mbox{background:var(--card);border-radius:12px;max-width:640px;width:100%;padding:22px}
+.mbox img{max-width:100%;border-radius:8px;margin:8px 0}
+.tl{border-left:3px solid var(--hv);margin:8px 0 0 6px;padding-left:14px}.tl div{margin-bottom:10px;font-size:14px}.tl small{color:var(--mut);display:block}
+.bar{display:flex;align-items:center;gap:10px;margin:7px 0;font-size:14px}.bar i{display:block;height:14px;background:var(--btn);border-radius:3px;min-width:3px}.bar span:first-child{width:110px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.warn{background:var(--hv);color:#14213d;padding:10px 14px;border-radius:8px;margin-bottom:16px;font-weight:600}
+@media(max-width:700px){.grid2,.two,.filters{grid-template-columns:1fr}.hero{font-size:34px}}
+</style></head><body>
+<div class="stripe"></div><div id="app"></div><div id="modal"></div>
+<script>
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt=t=>new Date(t).toLocaleString('en-IN',{dateStyle:'medium',timeStyle:'short'});
+const CATS=['Furniture','Electrical','Plumbing / Water leakage','Classroom','Internet / Network','Cleanliness','Other'];
+const DEPTS=['Computer Science','Information Technology','Electronics & Communication','Electrical & Electronics','Mechanical','Civil','Business Administration','Arts & Science'];
+const now=Date.now(),DAY=864e5;let mem=null;
+const seed=()=>({me:null,seq:1004,users:[
+ {id:'u2',role:'student',name:'Aarav Kumar',email:'student@fixcamp.edu',pw:'student123',roll:'21CS042',dept:'Computer Science',cls:'B Section',year:'3rd Year',phone:'9876543210',stay:'Hostel',guardian:'Suresh Kumar'},
+ {id:'u3',role:'staff',name:'Ravi Shankar',email:'staff@fixcamp.edu',pw:'staff123'}],
+ cs:[
+ {id:'FC-1001',by:'u2',cat:'Electrical',loc:'Block A, Room 204',desc:'Ceiling fan makes loud noise and sparks occasionally.',pri:'High',st:'Pending',photo:'',created:now-2*DAY,log:[{t:now-2*DAY,by:'Aarav Kumar',x:'Complaint submitted'}]},
+ {id:'FC-1002',by:'u2',cat:'Furniture',loc:'Library, 2nd floor',desc:'Three desks have broken legs.',pri:'Medium',st:'Progress',photo:'',created:now-4*DAY,log:[{t:now-4*DAY,by:'Aarav Kumar',x:'Complaint submitted'},{t:now-3*DAY,by:'Ravi Shankar',x:'Status: Pending → In Progress. Carpenter assigned.'}]},
+ {id:'FC-1003',by:'u2',cat:'Plumbing / Water leakage',loc:'Hostel A, Ground floor washroom',desc:'Tap leaking continuously.',pri:'Low',st:'Resolved',photo:'',created:now-6*DAY,resolved:now-5*DAY,log:[{t:now-6*DAY,by:'Aarav Kumar',x:'Complaint submitted'},{t:now-5*DAY,by:'Ravi Shankar',x:'Status: Pending → Resolved. Washer replaced.'}]}]});
+let D;try{D=JSON.parse(localStorage.getItem('fixcamp'))}catch(e){}D=D||seed();D.users.forEach(u=>{if(u.role==='admin')u.role='staff'});
+const save=()=>{mem=D;try{localStorage.setItem('fixcamp',JSON.stringify(D))}catch(e){}};
+const me=()=>D.users.find(u=>u.id===D.me);
+const SN={Pending:'Pending',Progress:'In Progress',Resolved:'Resolved'};
+const pill=(c,t)=>`<span class="pill ${c}">${t||c}</span>`;
+let view='',mode='login',LF={q:'',cat:'',pri:'',st:''};
+const NAV={student:[['dash','Dashboard'],['report','Report issue'],['mine','My complaints'],['profile','Profile']],
+ staff:[['dash','Dashboard'],['Pending','Pending'],['Progress','In progress'],['Resolved','Resolved'],['stats','Reports & analytics'],['users','Admin panel']]};
+
+function go(v){view=v;LF={q:'',cat:'',pri:'',st:''};render()}
+function render(){const u=me();$('#app').innerHTML=u?shell(u):authView();if(u)after()}
+
+/* ---------- AUTH ---------- */
+function authView(){const reg=mode==='register';return `<div class="auth"><p class="hero">Fix<wbr>Camp</p><p class="sub">Report campus problems. Watch them get fixed.</p>
+<div class="card"><div class="tabs"><button class="${reg?'':'on'}" onclick="mode='login';render()">Login</button><button class="${reg?'on':''}" onclick="mode='register';render()">Register</button></div>
+<form onsubmit="return auth(event)" autocomplete="off">
+${reg?`<label>I am a</label><select id="a_role"><option value="student">Student</option><option value="staff">Maintenance staff (admin access)</option></select><label>Full name</label><input id="a_name" required>`:''}
+<label>Email</label><input id="a_email" type="email" required>
+<label>Password</label><input id="a_pw" type="password" required minlength="4">
+<label class="chk"><input type="checkbox" onchange="$('#a_pw').type=this.checked?'text':'password'"> Show password</label>
+<div class="err" id="a_err"></div><button class="btn" style="width:100%">${reg?'Create account':'Log in'}</button></form>
+<div class="hint">Demo logins – Student: student@fixcamp.edu / student123<br>Maintenance staff (admin access): staff@fixcamp.edu / staff123</div></div></div>`}
+function auth(e){e.preventDefault();const em=$('#a_email').value.trim().toLowerCase(),pw=$('#a_pw').value;
+ if(mode==='login'){const u=D.users.find(x=>x.email===em&&x.pw===pw);if(!u){$('#a_err').textContent='Email or password is incorrect.';return false}D.me=u.id;view=NAV[u.role][0][0]}
+ else{if(D.users.some(x=>x.email===em)){$('#a_err').textContent='An account with this email already exists. Log in instead.';return false}
+  const u={id:'u'+Date.now(),role:$('#a_role').value,name:$('#a_name').value.trim(),email:em,pw};D.users.push(u);D.me=u.id;view=NAV[u.role][0][0]}
+ save();render();return false}
+function logout(){D.me=null;save();mode='login';render()}
+
+/* ---------- SHELL ---------- */
+function shell(u){return `<header><div class="brand">Fix<span>Camp</span></div><nav>${NAV[u.role].map(n=>`<button class="${view===n[0]?'on':''}" onclick="go('${n[0]}')">${n[1]}</button>`).join('')}</nav>
+<div class="who">${esc(u.name)} ${pill(u.role==='staff'?'Progress':'Low',u.role==='staff'?'Maintenance staff':'Student')}<button class="btn alt sm" onclick="logout()">Log out</button></div></header>
+<main>${page(u)}</main>`}
+function page(u){
+ if(u.role==='student'){if(view==='dash')return sDash(u);if(view==='report')return rForm();if(view==='mine')return `<h1>My complaints</h1><p class="sub">Search, filter and track every issue you reported.</p>${listUI()}`;return profile(u)}
+ if(view==='dash')return `<h1>Maintenance dashboard</h1><p class="sub">Every complaint on campus. Open one to set priority, change status, add an update or mark it resolved.</p>${tiles(D.cs)}${listUI()}`;
+ if(view==='stats')return stats();if(view==='users')return users();
+ const t={Pending:'Pending complaints',Progress:'In progress',Resolved:'Resolved complaints'}[view];return `<h1>${t}</h1><p class="sub">Open a complaint to update it.</p>${tiles(D.cs)}${listUI()}`}
+function after(){if(document.getElementById('tbl'))drawList()}
+
+/* ---------- LISTS ---------- */
+function scope(){const u=me();let a=D.cs;if(u.role==='student')a=a.filter(c=>c.by===u.id);if(u.role==='staff'&&['Pending','Progress','Resolved'].includes(view))a=a.filter(c=>c.st===view);return a}
+function tiles(a){const n=s=>a.filter(c=>c.st===s).length;return `<div class="tiles"><div class="tile"><b>${a.length}</b><small>Total</small></div><div class="tile" style="border-left-color:var(--pen)"><b>${n('Pending')}</b><small>Pending</small></div><div class="tile" style="border-left-color:var(--prog)"><b>${n('Progress')}</b><small>In progress</small></div><div class="tile" style="border-left-color:var(--res)"><b>${n('Resolved')}</b><small>Resolved</small></div></div>`}
+function listUI(){const hideSt=me().role==='staff'&&['Pending','Progress','Resolved'].includes(view);return `<div class="card"><div class="filters"><input placeholder="Search ID, location, description…" value="${esc(LF.q)}" oninput="LF.q=this.value;drawList()" aria-label="Search">
+<select onchange="LF.cat=this.value;drawList()" aria-label="Category"><option value="">All categories</option>${CATS.map(c=>`<option ${LF.cat===c?'selected':''}>${c}</option>`).join('')}</select>
+<select onchange="LF.pri=this.value;drawList()" aria-label="Priority"><option value="">All priorities</option>${['High','Medium','Low'].map(c=>`<option ${LF.pri===c?'selected':''}>${c}</option>`).join('')}</select>
+<select onchange="LF.st=this.value;drawList()" aria-label="Status" ${hideSt?'disabled':''}><option value="">All statuses</option>${Object.entries(SN).map(([k,v])=>`<option value="${k}" ${LF.st===k?'selected':''}>${v}</option>`).join('')}</select></div><div class="tw" id="tbl"></div></div>`}
+function drawList(){const q=LF.q.toLowerCase(),r=scope().filter(c=>(!LF.cat||c.cat===LF.cat)&&(!LF.pri||c.pri===LF.pri)&&(!LF.st||c.st===LF.st)&&(!q||(c.id+c.loc+c.desc+c.cat).toLowerCase().includes(q))).sort((a,b)=>b.created-a.created);
+ const un=id=>(D.users.find(u=>u.id===id)||{}).name||'Unknown',stu=me().role!=='student';
+ $('#tbl').innerHTML=r.length?`<table><thead><tr><th>ID</th><th>Category</th><th>Location</th>${stu?'<th>Reported by</th>':''}<th>Priority</th><th>Status</th><th>Date</th></tr></thead><tbody>${r.map(c=>`<tr tabindex="0" onclick="openC('${c.id}')" onkeydown="if(event.key==='Enter')openC('${c.id}')"><td><b>${c.id}</b></td><td>${esc(c.cat)}</td><td>${esc(c.loc)}</td>${stu?`<td>${esc(un(c.by))}</td>`:''}<td>${pill(c.pri)}</td><td>${pill(c.st,SN[c.st])}</td><td>${fmt(c.created).split(',')[0]}</td></tr>`).join('')}</tbody></table>`:`<div class="empty">No complaints match. ${me().role==='student'?'Use “Report issue” to file one.':'Try clearing the filters.'}</div>`}
+
+/* ---------- DETAIL ---------- */
+function openC(id){const c=D.cs.find(x=>x.id===id),u=me(),rep=D.users.find(x=>x.id===c.by)||{};const can=u.role!=='student';
+ $('#modal').innerHTML=`<div class="mbox" role="dialog" aria-label="Complaint ${c.id}"><div style="display:flex;justify-content:space-between;align-items:start"><h2>${c.id} · ${esc(c.cat)}</h2><button class="btn alt sm" onclick="closeM()">Close</button></div>
+<p>${pill(c.pri)} ${pill(c.st,SN[c.st])}</p><p><b>Location:</b> ${esc(c.loc)}<br><b>Reported by:</b> ${esc(rep.name)}${rep.roll?` (${esc(rep.roll)}, ${esc(rep.dept)})`:''}<br><b>Reported on:</b> ${fmt(c.created)}</p>
+<p>${esc(c.desc)}</p>${c.photo?`<img src="${c.photo}" alt="Issue photo">`:''}
+<h2 style="margin-top:16px">Timeline</h2><div class="tl">${c.log.map(l=>`<div><b>${esc(l.x)}</b><small>${esc(l.by)} · ${fmt(l.t)}</small></div>`).join('')}</div>
+${can?`<hr style="border:0;border-top:1px solid var(--line);margin:16px 0"><h2>Update complaint</h2><div class="grid2"><div><label>Status</label><select id="u_st">${Object.entries(SN).map(([k,v])=>`<option value="${k}" ${c.st===k?'selected':''}>${v}</option>`).join('')}</select></div>
+${`<div><label>Priority</label><select id="u_pri">${['High','Medium','Low'].map(p=>`<option ${c.pri===p?'selected':''}>${p}</option>`).join('')}</select></div>`}</div>
+<label>Update / comment</label><textarea id="u_msg" placeholder="e.g. Electrician assigned, parts ordered…"></textarea>
+<div style="display:flex;gap:8px;margin-top:12px"><button class="btn" onclick="upd('${c.id}')">Save update</button><button class="btn ok" onclick="upd('${c.id}',true)">Mark resolved</button></div>`:''}</div>`;$('#modal').classList.add('on')}
+function closeM(){$('#modal').classList.remove('on')}
+$('#modal').addEventListener('click',e=>{if(e.target.id==='modal')closeM()});
+function upd(id,resolve){const u=me();if(u.role==='student')return;const c=D.cs.find(x=>x.id===id),msg=$('#u_msg').value.trim();let st=resolve?'Resolved':$('#u_st').value;
+ const pri=$('#u_pri')?$('#u_pri').value:c.pri;const notes=[];
+ if(pri!==c.pri){notes.push(`Priority: ${c.pri} → ${pri}`);c.pri=pri}
+ if(st!==c.st){notes.push(`Status: ${SN[c.st]} → ${SN[st]}`);c.st=st;c.resolved=st==='Resolved'?Date.now():null}
+ if(msg)notes.push(msg);if(!notes.length){closeM();return}
+ c.log.push({t:Date.now(),by:u.name,x:notes.join('. ')});save();closeM();render()}
+
+/* ---------- STUDENT ---------- */
+function sDash(u){const mine=D.cs.filter(c=>c.by===u.id);return `<h1>Hi, ${esc(u.name.split(' ')[0])}</h1><p class="sub">Report a problem, then follow it until it is fixed.</p>
+${!u.roll?`<div class="warn">Your profile is incomplete. <a href="#" onclick="go('profile');return false">Add your class and department</a></div>`:''}
+${tiles(mine)}<div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn" onclick="go('report')">Report an issue</button><button class="btn alt" onclick="go('mine')">Track my complaints</button></div>`}
+function rForm(){return `<h1>Report an issue</h1><p class="sub">Tell maintenance what is broken and where.</p><div class="card" style="max-width:640px"><form onsubmit="return submitC(event)">
+<div class="grid2"><div><label>Category</label><select id="r_cat">${CATS.map(c=>`<option>${c}</option>`).join('')}</select></div><div><label>Priority</label><select id="r_pri"><option>Low</option><option selected>Medium</option><option>High</option></select></div></div>
+<label>Location</label><input id="r_loc" required placeholder="e.g. Block B, Room 112"><label>Description</label><textarea id="r_desc" required placeholder="What is wrong? Since when?"></textarea>
+<label>Photo (optional)</label><input id="r_ph" type="file" accept="image/*"><div class="err" id="r_err"></div><button class="btn">Submit complaint</button></form></div>`}
+function submitC(e){e.preventDefault();const f=$('#r_ph').files[0],u=me();
+ const done=ph=>{const id='FC-'+(D.seq++);D.cs.push({id,by:u.id,cat:$('#r_cat').value,loc:$('#r_loc').value.trim(),desc:$('#r_desc').value.trim(),pri:$('#r_pri').value,st:'Pending',photo:ph,created:Date.now(),log:[{t:Date.now(),by:u.name,x:'Complaint submitted'}]});save();go('mine');openC(id)};
+ if(!f)return done(''),false;const im=new Image();im.onload=()=>{const s=Math.min(1,700/im.width),c=document.createElement('canvas');c.width=im.width*s;c.height=im.height*s;c.getContext('2d').drawImage(im,0,0,c.width,c.height);done(c.toDataURL('image/jpeg',.6))};im.onerror=()=>{$('#r_err').textContent='That file could not be read as an image.'};im.src=URL.createObjectURL(f);return false}
+function profile(u){const F=(k,l,ph)=>`<div><label>${l}</label><input id="p_${k}" value="${esc(u[k]||'')}" placeholder="${ph||''}"></div>`;
+ return `<h1>My profile</h1><p class="sub">Maintenance staff use this to know who reported an issue.</p><div class="card" style="max-width:700px"><form onsubmit="return saveP(event)"><div class="grid2">
+${F('name','Full name')}<div><label>Email</label><input value="${esc(u.email)}" disabled></div>${F('roll','Roll / register number','21CS042')}
+<div><label>Department</label><select id="p_dept"><option value="">Select</option>${DEPTS.map(d=>`<option ${u.dept===d?'selected':''}>${d}</option>`).join('')}</select></div>
+${F('cls','Class / section','B Section')}<div><label>Year</label><select id="p_year">${['1st Year','2nd Year','3rd Year','4th Year'].map(y=>`<option ${u.year===y?'selected':''}>${y}</option>`).join('')}</select></div>
+${F('phone','Phone')}<div><label>Residence</label><select id="p_stay">${['Day scholar','Hostel'].map(y=>`<option ${u.stay===y?'selected':''}>${y}</option>`).join('')}</select></div>${F('guardian','Parent / guardian name')}</div>
+<div class="err" id="p_ok" style="color:var(--res)"></div><button class="btn" style="margin-top:10px">Save profile</button></form></div>`}
+function saveP(e){e.preventDefault();const u=me();['name','roll','dept','cls','year','phone','stay','guardian'].forEach(k=>u[k]=$('#p_'+k).value.trim());save();$('#p_ok').textContent='Profile saved.';return false}
+
+/* ---------- ADMIN ---------- */
+function stats(){const a=D.cs,n=a.length,res=a.filter(c=>c.st==='Resolved'),rate=n?Math.round(res.length/n*100):0;
+ const avg=res.length?(res.reduce((s,c)=>s+(c.resolved-c.created),0)/res.length/36e5).toFixed(1):'–';
+ const bars=(keys,f)=>{const m=Math.max(1,...keys.map(k=>a.filter(c=>f(c)===k).length));return keys.map(k=>{const v=a.filter(c=>f(c)===k).length;return `<div class="bar"><span>${SN[k]||k}</span><i style="width:${v/m*55}%"></i><b>${v}</b></div>`}).join('')};
+ return `<h1>Reports & analytics</h1><p class="sub">Resolution statistics across campus.</p>${tiles(a)}
+<div class="tiles"><div class="tile" style="border-left-color:var(--res)"><b>${rate}%</b><small>Resolution rate</small></div><div class="tile"><b>${avg}${avg==='–'?'':' h'}</b><small>Avg. time to resolve</small></div><div class="tile" style="border-left-color:var(--hi)"><b>${a.filter(c=>c.pri==='High'&&c.st!=='Resolved').length}</b><small>High priority open</small></div></div>
+<div class="two"><div class="card"><h2>By category</h2>${bars(CATS,c=>c.cat)}</div><div class="card"><h2>By priority</h2>${bars(['High','Medium','Low'],c=>c.pri)}<h2 style="margin-top:20px">By status</h2>${bars(['Pending','Progress','Resolved'],c=>c.st)}</div></div>`}
+function users(){return `<h1>Admin panel</h1><p class="sub">Manage everyone who can use FixCamp (students and maintenance staff). Only maintenance staff can see this page.</p><div class="card"><div class="tw"><table><thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Details</th><th></th></tr></thead><tbody>${D.users.map(u=>`<tr style="cursor:default"><td>${esc(u.name)}</td><td>${esc(u.email)}</td><td>${u.role}</td><td>${u.role==='student'?esc([u.roll,u.dept,u.cls].filter(Boolean).join(' · '))||'Profile incomplete':''}</td><td>${u.id===me().id?'':`<button class="btn alt sm" onclick="delU('${u.id}')">Remove</button>`}</td></tr>`).join('')}</tbody></table></div></div>`}
+function delU(id){if(me().role!=='staff')return;if(!confirm('Remove this user? Their complaints stay on record.'))return;D.users=D.users.filter(u=>u.id!==id);save();render()}
+render();
+</script></body></html>
